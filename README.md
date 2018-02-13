@@ -90,12 +90,10 @@ print(tree, "ratio_curr", "ratio_effect", "weight_effect")
 
 ``` r
 library(ggplot2)
-# debug(plot_tree_ratio)
 plot_tree_ratio(tree)  +
   ggtitle("Decompositon of consolidated cost-to-income ratio") +
   xlab("Entitity") + 
   theme(legend.text = element_text(size = 7))
-#> Warning: Removed 6 rows containing missing values (position_stack).
 ```
 
 <img src="man/figures/README-decomp plot-1.png" width="70%" />

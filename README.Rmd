@@ -77,7 +77,6 @@ print(tree, "ratio_curr", "ratio_effect", "weight_effect")
 
 ```{r decomp plot, fig.height=6, fig.width=7, dpi=96, out.width='70%'}
 library(ggplot2)
-# debug(plot_tree_ratio)
 plot_tree_ratio(tree)  +
   ggtitle("Decompositon of consolidated cost-to-income ratio") +
   xlab("Entitity") + 
