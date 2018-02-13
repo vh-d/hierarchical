@@ -75,7 +75,7 @@ print(tree, "ratio_curr", "ratio_effect", "weight_effect")
 
 ...or print it using `ggplot2`
 
-```{r decomp plot, fig.height=5, fig.width=6, out.width='80%'}
+```{r decomp plot, fig.height=6, fig.width=7, dpi=96, out.width='70%'}
 library(ggplot2)
 # debug(plot_tree_ratio)
 plot_tree_ratio(tree)  +
