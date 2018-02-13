@@ -1,0 +1,87 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# hierarchical
+
+`hierarchical` provides tools for manipulations, transformations and analysis of hierarchical data
+
+
+## Example of decomposition of financial ratios
+
+### Simulate random data
+
+```{r}
+library(data.table)
+library(data.tree)
+
+# load example data
+data("Angell", package = "car")
+DT <- as.data.table(Angell, keep.rownames = TRUE)[sample(1:.N, 20)]
+setnames(DT, "rn", "name")
+
+# simulate financial data
+DT <- rbindlist(list("2016" = DT, "2007" = DT), idcol = "year")
+DT[, cost   := 1000*rgamma(.N, 30, 30)]
+DT[, income := 1000*rgamma(.N, 31, 31)]
+
+# compute first differences
+setkey(DT, region, name, year)
+DT[, cost_diff   := c(NA, diff(cost)),   by = .(region, name)]
+DT[, income_diff := c(NA, diff(income)), by = .(region, name)]
+DT[, cost_to_income := cost / income]
+```
+
+### Convertion of data.table into a data.tree
+```{r main}
+library(hierarchical)
+
+tree <- dt2tree_ratio(DT, 
+                      tree_name       = "Total", 
+                      numerator_name  = "cost", 
+                      denomiator_name = "income", 
+                      dim_names       = c("region", "name"))
+```
+
+
+### Decomposition of ratios
+
+```{r fig.height=7, fig.width=7}
+tree$Do(decomp_ratios_root_full, 
+        root_denominator_curr = tree$denominator_curr,
+        root_denominator_lag  = tree$denominator_lag, 
+        multipl = 1)
+```
+
+### Output
+
+You can print "ratio_effect", "weight_effect" and "residual_effect" using `data.tree` methods:
+
+```{r}
+print(tree, "ratio_curr", "ratio_effect", "weight_effect")
+```
+
+
+...or print it using `ggplot2`
+
+```{r fig.height=7, fig.width=7}
+library(ggplot2)
+# debug(plot_tree_ratio)
+plot_tree_ratio(tree)  +
+  ggtitle("Decompositon of consolidated cost-to-income ratio") +
+  xlab("Entitity") + 
+  theme(legend.text = element_text(size = 8))
+```
+
+
