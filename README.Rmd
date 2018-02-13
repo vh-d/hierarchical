@@ -57,7 +57,7 @@ tree <- dt2tree_ratio(DT,
 
 ### Decomposition of ratios
 
-```{r fig.height=7, fig.width=7}
+```{r compute decomp, fig.height=7, fig.width=7}
 tree$Do(decomp_ratios_root_full, 
         root_denominator_curr = tree$denominator_curr,
         root_denominator_lag  = tree$denominator_lag, 
@@ -68,20 +68,20 @@ tree$Do(decomp_ratios_root_full,
 
 You can print "ratio_effect", "weight_effect" and "residual_effect" using `data.tree` methods:
 
-```{r}
+```{r decomp table}
 print(tree, "ratio_curr", "ratio_effect", "weight_effect")
 ```
 
 
 ...or print it using `ggplot2`
 
-```{r fig.height=7, fig.width=7}
+```{r decomp plot, fig.height=5, fig.width=6, out.width='80%'}
 library(ggplot2)
 # debug(plot_tree_ratio)
 plot_tree_ratio(tree)  +
   ggtitle("Decompositon of consolidated cost-to-income ratio") +
   xlab("Entitity") + 
-  theme(legend.text = element_text(size = 8))
+  theme(legend.text = element_text(size = 7))
 ```
 
 
