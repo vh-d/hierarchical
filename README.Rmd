@@ -27,7 +27,7 @@ library(data.table)
 library(data.tree)
 
 # load example data
-data("Angell", package = "car")
+data("Angell", package = "carData")
 DT <- as.data.table(Angell, keep.rownames = TRUE)[sample(1:.N, 20)]
 setnames(DT, "rn", "name")
 
