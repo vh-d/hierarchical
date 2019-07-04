@@ -295,7 +295,7 @@ plot_tree_ratio <- function(
 
   # colors
   if (is.null(col_pal)) {
-    col_pal <- c("#000000", "#AAAAAA", "#BEBEBE", scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0, direction = 1)(5))
+    col_pal <- c("#000000", "#AAAAAA", "#FFA500", scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0, direction = 1)(5))
     names(col_pal) <- c("total_effect", "low", "residual_effect", "decrease", "", "increase", "weight_effect", "ratio_effect")
   }
 
