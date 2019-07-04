@@ -5,21 +5,23 @@
 #' \code{dt_to_tree_ratio()} converts relational data into \code{data.tree} suitable for drilldown of ratio values.
 #' @rdname ratio_decomp
 #' @export
-dt2tree_ratio <- function(data,
-                             tree_name,
-                             numerator_name,
-                             denomiator_name,
-                             dim_names,
-                             mode = c("diff", "lag"),
-                             diff_postfix = "_diff",
-                             lag_postfix  = "_lag",
-                             na.rm = TRUE) {
+dt2tree_ratio <- function(
+  data,
+  tree_name,
+  numerator_name,
+  denomiator_name,
+  dim_names,
+  mode = c("diff", "lag"),
+  diff_postfix = "_diff",
+  lag_postfix  = "_lag",
+  na.rm = TRUE
+) {
 
   mode <- match.arg(mode)
 
   if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("Package 'data.table' needed for this function to work. Please install it.",
-      call. = FALSE)
+         call. = FALSE)
   }
 
   if (mode == "diff") {
@@ -144,10 +146,12 @@ decomp_ratios_parent_full <- function(n, multipl = 100) {
 #' @rdname ratio_decomp
 #' @details \code{decomp_ratios_root} and \code{decomp_ratios_root_full} relats nodes' data relative to root of the tree
 #' @export
-decomp_ratios_root <- function(n,
-                               root_denominator_curr,
-                               root_denominator_lag,
-                               multipl = 100) {
+decomp_ratios_root <- function(
+  n,
+  root_denominator_curr,
+  root_denominator_lag,
+  multipl = 100
+) {
 
   n$ratio_curr <- multipl * n$numerator_curr / n$denominator_curr
   n$ratio_lag  <- multipl * n$numerator_lag / n$denominator_lag
@@ -168,10 +172,12 @@ decomp_ratios_root <- function(n,
 
 #' @rdname ratio_decomp
 #' @export
-decomp_ratios_root_full <- function(n,
-                                    root_denominator_curr,
-                                    root_denominator_lag,
-                                    multipl = 100) {
+decomp_ratios_root_full <- function(
+  n,
+  root_denominator_curr,
+  root_denominator_lag,
+  multipl = 100
+) {
 
   n$ratio_curr <- multipl * n$numerator_curr / n$denominator_curr
   n$ratio_lag  <- multipl * n$numerator_lag / n$denominator_lag
@@ -191,12 +197,14 @@ decomp_ratios_root_full <- function(n,
 # todo: option to drop some facets
 #' @rdname ratio_decomp
 #' @export
-plot_tree_ratio <- function(tree,
-                            facet_labels = c("Additive effects", "Ratio", "Numerator", "Denominator"),
-                            eff_labels = c("Total effect", "Weight effect", "Ratio effect", "Residual effect"),
-                            root_num_denom = FALSE,
-                            col_pal = NULL,
-                            ...) {
+plot_tree_ratio <- function(
+  tree,
+  facet_labels = c("Additive effects", "Ratio", "Numerator", "Denominator"),
+  eff_labels = c("Total effect", "Weight effect", "Ratio effect", "Residual effect"),
+  root_num_denom = FALSE,
+  col_pal = NULL,
+  ...
+) {
 
   # require ggplot2 namespace
   if (!requireNamespace("ggplot2", quietly = TRUE)) {

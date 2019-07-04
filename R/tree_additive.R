@@ -1,9 +1,11 @@
 
 #' @export
-dt2tree <- function(data,
-                    tree_name,
-                    value_name,
-                    dim_names) {
+dt2tree <- function(
+  data,
+  tree_name,
+  value_name,
+  dim_names
+) {
   FromDataFrameTable(
     data[,
          .(tree_name = tree_name,
