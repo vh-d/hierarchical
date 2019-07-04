@@ -11,8 +11,8 @@
 \title{Decomsition of hierarchical data indicators}
 \usage{
 dt2tree_ratio(data, tree_name, numerator_name, denomiator_name, dim_names,
-  mode = c("diff", "lag"), diff_postfix = "_diff", lag_postfix = "_lag",
-  na.rm = TRUE)
+  mode = c("diff", "lag"), diff_postfix = "_diff",
+  lag_postfix = "_lag", na.rm = TRUE)
 
 agg_tree_ratios(node)
 
@@ -26,9 +26,10 @@ decomp_ratios_root(n, root_denominator_curr, root_denominator_lag,
 decomp_ratios_root_full(n, root_denominator_curr, root_denominator_lag,
   multipl = 100)
 
-plot_tree_ratio(tree, facet_labels = c("Effects", "Ratio", "Numerator",
-  "Denominator"), eff_labels = c("Total effect", "Weight effect",
-  "Ratio effect", "Residual effect"), root_num_denom = FALSE, ...)
+plot_tree_ratio(tree, facet_labels = c("Additive effects", "Ratio",
+  "Numerator", "Denominator"), eff_labels = c("Total effect",
+  "Weight effect", "Ratio effect", "Residual effect"),
+  root_num_denom = FALSE, col_pal = NULL, ...)
 }
 \description{
 Convert data.table with numerator and denominator values to data.tree.
