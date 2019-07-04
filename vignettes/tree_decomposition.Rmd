@@ -15,51 +15,73 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+# hierarchical
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+`hierarchical` provides tools for manipulations, transformations and analysis of hierarchical data
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
 
-## Vignette Info
+## Example of decomposition of financial ratios
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+### Simulate random data
 
-## Styles
+```{r}
+library(data.table)
+library(data.tree)
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+# load example data
+data("Angell", package = "carData")
+DT <- as.data.table(Angell, keep.rownames = TRUE)[sample(1:.N, 20)]
+setnames(DT, "rn", "name")
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+# simulate financial data
+DT <- rbindlist(list("2016" = DT, "2007" = DT), idcol = "year")
+DT[, cost   := 1000*rgamma(.N, 30, 30)]
+DT[, income := 1000*rgamma(.N, 31, 31)]
 
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+# compute first differences
+setkey(DT, region, name, year)
+DT[, cost_diff   := c(NA, diff(cost)),   by = .(region, name)]
+DT[, income_diff := c(NA, diff(income)), by = .(region, name)]
+DT[, cost_to_income := cost / income]
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+### Convertion of data.table into a data.tree
+```{r main}
+library(hierarchical)
 
-      output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+tree <- dt2tree_ratio(DT, 
+                      tree_name       = "Total", 
+                      numerator_name  = "cost", 
+                      denomiator_name = "income", 
+                      dim_names       = c("region", "name"))
 ```
 
-Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+### Decomposition of ratios
+
+```{r compute decomp, fig.height=7, fig.width=7}
+tree$Do(decomp_ratios_root_full, 
+        root_denominator_curr = tree$denominator_curr,
+        root_denominator_lag  = tree$denominator_lag, 
+        multipl = 1)
+```
+
+### Output
+
+You can print "ratio_effect", "weight_effect" and "residual_effect" using `data.tree` methods:
+
+```{r decomp table}
+print(tree, "ratio_curr", "ratio_effect", "weight_effect")
+```
+
+
+...or print it using `ggplot2`
+
+```{r decomp plot, fig.height=6, fig.width=7, dpi=96, out.width='70%'}
+library(ggplot2)
+plot_tree_ratio(tree)  +
+  ggtitle("Decompositon of consolidated cost-to-income ratio") +
+  xlab("Entitity") + 
+  theme(legend.text = element_text(size = 7))
+```
+
