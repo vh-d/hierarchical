@@ -4,6 +4,12 @@
 #' @details
 #' \code{dt_to_tree_ratio()} converts relational data into \code{data.tree} suitable for drilldown of ratio values.
 #' @rdname ratio_decomp
+#' @examples
+#' tree <- dt2tree_ratio(DT,
+#'                       tree_name       = "Total",
+#'                       numerator_name  = "cost",
+#'                       denomiator_name = "income",
+#'                       dim_names       = c("region", "name"))
 #' @export
 dt2tree_ratio <- function(
   data,
@@ -171,6 +177,13 @@ decomp_ratios_root <- function(
 
 
 #' @rdname ratio_decomp
+#' @examples
+#'
+#' tree$Do(decomp_ratios_root_full,
+#'         root_denominator_curr = tree$denominator_curr,
+#'         root_denominator_lag  = tree$denominator_lag,
+#'         multipl = 1)
+#'
 #' @export
 decomp_ratios_root_full <- function(
   n,
@@ -195,7 +208,18 @@ decomp_ratios_root_full <- function(
 
 
 # todo: option to drop some facets
-#' @rdname ratio_decomp
+
+#' Plot additive effects as result of change decomposition for ratio indicators
+#' @param tree a tree object with all decomposed effect precomputed
+#'
+#' @param facet_labels custom user-defined labels for chart columns
+#' @param eff_labels custom user-defined labels for guide
+#' @param root_num_denom logical on/off switch for ploting root node's numerator and denominator
+#' @param col_pal custom user-defined collor pallette
+#' @param ... args passed to data.tree::ToDataFrameTree
+#' @details `plot_tree_ratio()` requires `ggplot2` package
+#' @examples
+#' plot_tree_ratio(tree)
 #' @export
 plot_tree_ratio <- function(
   tree,
@@ -212,13 +236,17 @@ plot_tree_ratio <- function(
       call. = FALSE)
   }
 
-  dt <- ToDataFrameTree(tree,
-                        ...,
-                        format = TRUE,
-                        "weight_effect", "ratio_effect", "residual_effect",
-                        "ratio_curr", "ratio_lag",
-                        "numerator_curr", "numerator_lag",
-                        "denominator_curr", "denominator_lag")
+  dt <-
+    data.tree::ToDataFrameTree(
+      tree,
+      ...,
+      format = TRUE,
+      "weight_effect", "ratio_effect", "residual_effect",
+      "ratio_curr", "ratio_lag",
+      "numerator_curr", "numerator_lag",
+      "denominator_curr", "denominator_lag"
+    )
+
   setDT(dt)
   dt[, levelName      := reorder(levelName,  -.I)]
   dt[, total_effect   := weight_effect + ratio_effect + residual_effect]

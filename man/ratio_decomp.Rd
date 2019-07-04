@@ -7,7 +7,6 @@
 \alias{decomp_ratios_parent_full}
 \alias{decomp_ratios_root}
 \alias{decomp_ratios_root_full}
-\alias{plot_tree_ratio}
 \title{Decomsition of hierarchical data indicators}
 \usage{
 dt2tree_ratio(data, tree_name, numerator_name, denomiator_name, dim_names,
@@ -25,11 +24,6 @@ decomp_ratios_root(n, root_denominator_curr, root_denominator_lag,
 
 decomp_ratios_root_full(n, root_denominator_curr, root_denominator_lag,
   multipl = 100)
-
-plot_tree_ratio(tree, facet_labels = c("Additive effects", "Ratio",
-  "Numerator", "Denominator"), eff_labels = c("Total effect",
-  "Weight effect", "Ratio effect", "Residual effect"),
-  root_num_denom = FALSE, col_pal = NULL, ...)
 }
 \description{
 Convert data.table with numerator and denominator values to data.tree.
@@ -40,4 +34,17 @@ Convert data.table with numerator and denominator values to data.tree.
 \code{decomp_ratios_parent} and \code{decomp_ratios_parent_full} relats nodes' data relative to immediate parent node
 
 \code{decomp_ratios_root} and \code{decomp_ratios_root_full} relats nodes' data relative to root of the tree
+}
+\examples{
+tree <- dt2tree_ratio(DT,
+                      tree_name       = "Total",
+                      numerator_name  = "cost",
+                      denomiator_name = "income",
+                      dim_names       = c("region", "name"))
+
+tree$Do(decomp_ratios_root_full,
+        root_denominator_curr = tree$denominator_curr,
+        root_denominator_lag  = tree$denominator_lag,
+        multipl = 1)
+
 }

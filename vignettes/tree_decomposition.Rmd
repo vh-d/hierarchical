@@ -45,7 +45,7 @@ plot(10:1)
 
 You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
+      output:
       rmarkdown::html_vignette:
         fig_caption: yes
 
