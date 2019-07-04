@@ -1,5 +1,5 @@
 Package: hierarchical
-Version: 0.0.1
+Version: 0.1.0
 Title: Tools for manipulation, transformation and analysis of hierarchical data
 Description: Data often have hierarchical structure. This package provides various tools for detection of important elements, transformations, etc...
 Authors@R: person("Vaclav", "Hausenblas", , "vaclav.hausenblas@gmail.com", c("aut", "cre"))
